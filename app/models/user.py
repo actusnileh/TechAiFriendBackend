@@ -1,7 +1,7 @@
 from sqlalchemy import (
     Column,
-    Integer,
     Float,
+    Integer,
     String,
 )
 

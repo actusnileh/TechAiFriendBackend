@@ -1,27 +1,41 @@
-from pydantic import BaseModel, Field
 from typing import Optional
+
+from pydantic import (
+    BaseModel,
+    Field,
+)
 
 
 class AddUserSchema(BaseModel):
     vk_id: int = Field(..., description="ID пользователя в VK")
     age: int = Field(..., ge=0, description="Возраст пользователя")
     date_of_birth: str = Field(
-        ..., description="Дата рождения пользователя (формат MM-DD)"
+        ...,
+        description="Дата рождения пользователя (формат MM-DD)",
     )
     year_of_birth: int = Field(
-        ..., ge=1900, le=2025, description="Год рождения пользователя"
+        ...,
+        ge=1900,
+        le=2025,
+        description="Год рождения пользователя",
     )
     average_likes_photos: float = Field(
-        ..., ge=0, description="Среднее количество лайков на фото"
+        ...,
+        ge=0,
+        description="Среднее количество лайков на фото",
     )
     average_likes_posts: float = Field(
-        ..., ge=0, description="Среднее количество лайков на посты"
+        ...,
+        ge=0,
+        description="Среднее количество лайков на посты",
     )
     interest: Optional[str] = Field(None, description="Интересы пользователя")
     friends_count: int = Field(..., ge=0, description="Количество друзей пользователя")
     posts_count: int = Field(..., ge=0, description="Количество постов пользователя")
     photo_count: int = Field(
-        ..., ge=0, description="Количество фотографий пользователя"
+        ...,
+        ge=0,
+        description="Количество фотографий пользователя",
     )
 
     class Config:
@@ -37,5 +51,5 @@ class AddUserSchema(BaseModel):
                 "friends_count": 150,
                 "posts_count": 50,
                 "photo_count": 200,
-            }
+            },
         }
