@@ -26,5 +26,5 @@ class User(Base):
 
     posts = relationship("Posts", back_populates="users")
     groups = relationship("Groups", back_populates="users")
-    photos = relationship("Photo", back_populates="users")
+    photos = relationship("Photos", back_populates="users")
     friends = relationship("Friends", back_populates="users")
