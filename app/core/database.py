@@ -10,7 +10,7 @@ from sqlalchemy.orm import (
 from app.core.configs import settings
 
 
-engine = create_async_engine(settings.MONGO_DB_URL)
+engine = create_async_engine(settings.POSTGRES_DB_URL)
 
 async_session_maker = sessionmaker(
     engine,
