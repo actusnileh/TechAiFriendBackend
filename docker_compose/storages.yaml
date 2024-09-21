@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres
-    container_name: dh_postgres
+    container_name: tech_ai_postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -11,11 +11,11 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - dstuhomework_network
+      - tech_ai_network
 
 volumes:
   postgres_data:
 
 networks:
-  dstuhomework_network:
+  tech_ai_network:
     driver: bridge

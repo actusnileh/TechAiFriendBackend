@@ -7,9 +7,9 @@ services:
     ports:
       - "8000:8000"
     networks:
-      - dstuhomework_network
-    container_name: dh-fastapi
+      - tech_ai_network
+    container_name: techai-fastapi
 
 networks:
-  dstuhomework_network:
+  tech_ai_network:
     driver: bridge
