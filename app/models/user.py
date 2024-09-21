@@ -1,9 +1,10 @@
 from sqlalchemy import (
     Column,
-    Integer,
     Float,
+    Integer,
     String,
 )
+from sqlalchemy.orm import relationship
 
 from app.core.database import Base
 
@@ -22,3 +23,8 @@ class User(Base):
     friends_count = Column(Integer, nullable=False)
     posts_count = Column(String, nullable=False)
     photo_count = Column(String, nullable=False)
+
+    posts = relationship("Posts", back_populates="users")
+    groups = relationship("Groups", back_populates="users")
+    photos = relationship("Photo", back_populates="users")
+    friends = relationship("Friends", back_populates="users")
