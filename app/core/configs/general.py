@@ -11,5 +11,8 @@ class Environment(str, Enum):
 
 class GeneralSettings(BaseSettings):
     SERVICE_NAME: str = "TechFriendBackend"
+
+    VK_API_TOKEN: str = "VK_API_TOKEN"
+
     ENVIROMENT: Environment
     DEBUG: bool
