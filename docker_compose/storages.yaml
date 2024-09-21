@@ -9,12 +9,12 @@ services:
     ports:
       - ${POSTGRES_PORT}:5432
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./tech_ai_database:/var/lib/postgresql/data
     networks:
       - tech_ai_network
 
 volumes:
-  postgres_data:
+  tech_ai_database:
 
 networks:
   tech_ai_network:

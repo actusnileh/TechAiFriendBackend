@@ -57,7 +57,7 @@ class VkApiInfra:
                 "source": "Репост от" if "copy_history" in post else "Пользователь",
                 "likesCount": post.get("likes", {}).get("count", 0),
             }
-            for post in posts
+            for post in posts if post.get("text")
         ]
 
     async def get_user_photos(
@@ -81,7 +81,11 @@ class VkApiInfra:
                     "%Y-%m-%d %H:%M:%S",
                 ),
                 "likesCount": photo.get("likes", {}).get("count", 0),
-                "url": photo["sizes"][-1]["url"] if photo.get("sizes") else None,
+                "url": (
+                    photo["sizes"][1]["url"]
+                    if len(photo.get("sizes", [])) > 1
+                    else None
+                ),
             }
             for photo in photos
         ]
