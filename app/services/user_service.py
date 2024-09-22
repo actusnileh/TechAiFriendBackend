@@ -1,5 +1,7 @@
 import asyncio
 
+from fastapi import HTTPException
+
 from sqlalchemy.exc import IntegrityError
 
 from app.infrastructure.vk_api_infra import VkApiInfra
@@ -8,6 +10,14 @@ from app.repository.groups_repository import GroupsRepository
 from app.repository.photo_repository import PhotosRepository
 from app.repository.posts_repository import PostsRepository
 from app.repository.user_repository import UserRepository
+from app.schema.add_user_schema import (
+    AddUserSchema,
+    FriendSchema,
+    GroupSchema,
+    PhotoSchema,
+    PostSchema,
+    UserSchema,
+)
 from app.utils.api_utils import (
     calculate_age,
     calculate_avg_likes,
@@ -19,7 +29,7 @@ class UserService:
     def __init__(self):
         self.infra = VkApiInfra()
 
-    async def add_user(self, url: str):
+    async def add_user(self, url: str) -> AddUserSchema:
         user_info = await self.infra.get_user_info(url)
 
         user_id = user_info["id"]
@@ -44,8 +54,10 @@ class UserService:
             )
         except IntegrityError:
             print(f"Пользователь с vk_id={user_id} уже существует в базе данных.")
-            return
-
+            raise HTTPException(
+                status_code=400,
+                detail="Пользователь уже существует в базе данных.",
+            )
         await asyncio.gather(
             *[
                 PostsRepository.add(
@@ -88,3 +100,54 @@ class UserService:
                 for friend in user_friends
             ],
         )
+
+        user_data = UserSchema(
+            vk_id=user_id,
+            age=calculate_age(user_info.get("bdate")),
+            date_of_birth=user_info.get("bdate", ""),
+            year_of_birth=extract_year(user_info.get("bdate")),
+            average_likes_photos=calculate_avg_likes(user_photos),
+            average_likes_posts=calculate_avg_likes(user_posts),
+            interest=user_interests,
+            friends_count=len(user_friends),
+            posts_count=str(len(user_posts)),
+            photo_count=str(len(user_photos)),
+            posts=[
+                PostSchema(
+                    vk_id=post["vkPostID"],
+                    date=post["date"],
+                    text=post["text"],
+                    author=post["author"],
+                    friend_or_not_friend=post["source"] == "Репост от",
+                )
+                for post in user_posts[:2]
+            ],
+            photos=[
+                PhotoSchema(
+                    photo_id=photo["photoID"],
+                    url=photo["url"],
+                    likes_count=photo["likesCount"],
+                    description=None,
+                )
+                for photo in user_photos[:2]
+            ],
+            groups=[
+                GroupSchema(
+                    id=group["id"],
+                    name=group["name"],
+                    description=group["description"],
+                )
+                for group in user_groups[:2]
+            ],
+            friends=[
+                FriendSchema(
+                    id=friend["id"],
+                    city=friend["city"],
+                    education=friend.get("university_name"),
+                    job=friend.get("company"),
+                )
+                for friend in user_friends[:2]
+            ],
+        )
+
+        return AddUserSchema(message="ok", data=user_data)

@@ -1,8 +1,12 @@
 from fastapi import (
     APIRouter,
     Depends,
+    HTTPException,
 )
 
+from sqlalchemy.exc import IntegrityError
+
+from app.schema.add_user_schema import AddUserSchema
 from app.services.user_service import UserService
 from app.utils.api_utils import extract_user_id
 
@@ -16,7 +20,10 @@ def get_user_service() -> UserService:
 
 @router.post(
     "/add",
+    description="Возвращает данные добавленные в базу данных \
+(Фото, посты, фотки, группы, друзей возвращает в количестве 2-ух штук для примера)",
     summary="Добавить пользователя в базу данных",
+    response_model=AddUserSchema,
 )
 async def add_user(
     url: str,
@@ -24,8 +31,11 @@ async def add_user(
 ):
     try:
         user_id = extract_user_id(url)
-        await user_service.add_user(user_id)
+        return await user_service.add_user(user_id)
+    except IntegrityError:
+        raise HTTPException(
+            status_code=400,
+            detail="Пользователь уже существует в базе данных.",
+        )
     except Exception as e:
-        return {"error": str(e)}
-    else:
-        return {"message": "User added successfully"}
+        raise HTTPException(status_code=500, detail=f"{e}")
