@@ -1,4 +1,5 @@
 import datetime
+import re
 
 
 def calculate_avg_likes(items: list[dict]) -> float:
@@ -21,3 +22,10 @@ def extract_year(bdate: str) -> int:
     if not bdate or bdate.count(".") != 2:
         return 0
     return int(bdate.split(".")[-1])
+
+
+def extract_user_id(url: str) -> str:
+    match = re.search(r"vk\.com/(.+)$", url)
+    if match:
+        return match.group(1)
+    raise ValueError("Invalid URL format")
