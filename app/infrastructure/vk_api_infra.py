@@ -1,3 +1,4 @@
+import asyncio
 import datetime
 from typing import (
     Any,
@@ -20,9 +21,14 @@ class VkApiInfra:
         params["access_token"] = self.access_token
         params["v"] = self.version
         async with httpx.AsyncClient() as client:
-            response = await client.get(self.base_url + method, params=params)
+            for _ in range(5):
+                response = await client.get(self.base_url + method, params=params)
+                if response.status_code == 200:
+                    await asyncio.sleep(0.2)
+                    return response.json()
+                else:
+                    await asyncio.sleep(60)
             response.raise_for_status()
-            return response.json()
 
     async def get_user_info(self, user_id: str) -> Dict[str, Any]:
         params = {"user_ids": user_id, "fields": "bdate"}
@@ -57,7 +63,8 @@ class VkApiInfra:
                 "source": "Репост от" if "copy_history" in post else "Пользователь",
                 "likesCount": post.get("likes", {}).get("count", 0),
             }
-            for post in posts if post.get("text")
+            for post in posts
+            if post.get("text")
         ]
 
     async def get_user_photos(

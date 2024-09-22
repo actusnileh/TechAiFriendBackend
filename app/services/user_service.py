@@ -1,3 +1,7 @@
+import asyncio
+
+from sqlalchemy.exc import IntegrityError
+
 from app.infrastructure.vk_api_infra import VkApiInfra
 from app.repository.friends_repository import FriendsRepository
 from app.repository.groups_repository import GroupsRepository
@@ -9,9 +13,6 @@ from app.utils.api_utils import (
     calculate_avg_likes,
     extract_year,
 )
-from sqlalchemy.exc import IntegrityError
-
-import asyncio
 
 
 class UserService:
@@ -22,16 +23,11 @@ class UserService:
         user_info = await self.infra.get_user_info(url)
 
         user_id = user_info["id"]
-        tasks = [
-            self.infra.get_user_posts(user_id),
-            self.infra.get_user_photos(user_id),
-            self.infra.get_user_groups(user_id),
-            self.infra.get_user_interests(user_id),
-            self.infra.get_user_friends(user_id),
-        ]
-        user_posts, user_photos, user_groups, user_interests, user_friends = (
-            await asyncio.gather(*tasks)
-        )
+        user_posts = await self.infra.get_user_posts(user_id)
+        user_photos = await self.infra.get_user_photos(user_id)
+        user_groups = await self.infra.get_user_groups(user_id)
+        user_interests = await self.infra.get_user_interests(user_id)
+        user_friends = await self.infra.get_user_friends(user_id)
 
         try:
             await UserRepository.add(
