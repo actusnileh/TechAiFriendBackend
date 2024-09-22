@@ -56,3 +56,10 @@ class BaseRepository:
                 query = delete(cls.model).where(and_(*conditions))
                 result = await session.execute(query)
                 return result.rowcount if result else 0
+
+    @classmethod
+    async def find_all(cls):
+        async with async_session_maker() as session:
+            query = select(cls.model)
+            result = await session.execute(query)
+            return result.scalars().all()

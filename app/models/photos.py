@@ -13,11 +13,15 @@ class Photos(Base):
     __tablename__ = "photo"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey('users.vk_id'))
+    user_id = Column(Integer, ForeignKey("users.vk_id"))
 
     photo_id = Column(Integer, nullable=False)
     photo_url = Column(String, nullable=False)
     photo_count_likes = Column(Integer, nullable=False)
     photo_description = Column(String, nullable=True)
+    photo_description_ru = Column(String, nullable=True)
+    photo_description_colors = Column(String, nullable=True)
+    photo_description_category = Column(String, nullable=True)
+    photo_description_style = Column(String, nullable=True)
 
-    user = relationship("User", back_populates="photo")
+    user = relationship("User", back_populates="photos")

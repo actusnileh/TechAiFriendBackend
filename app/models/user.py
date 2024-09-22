@@ -7,6 +7,10 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship
 
 from app.core.database import Base
+from app.models.friends import Friends  # noqa
+from app.models.groups import Groups  # noqa
+from app.models.photos import Photos  # noqa
+from app.models.posts import Posts  # noqa
 
 
 class User(Base):
@@ -24,7 +28,7 @@ class User(Base):
     posts_count = Column(String, nullable=False)
     photo_count = Column(String, nullable=False)
 
-    posts = relationship("Posts", back_populates="users")
-    groups = relationship("Groups", back_populates="users")
-    photos = relationship("Photos", back_populates="users")
-    friends = relationship("Friends", back_populates="users")
+    posts = relationship("Posts", back_populates="user")
+    groups = relationship("Groups", back_populates="user")
+    photos = relationship("Photos", back_populates="user")
+    friends = relationship("Friends", back_populates="user")
