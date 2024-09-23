@@ -3,13 +3,20 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1.routes import routers as v1_routers
 from app.core.configs import settings
+from app.tasks.neural_network import apply_neural_network
+
+
+async def lifespan(app: FastAPI):
+    apply_neural_network.delay()
+    yield
 
 
 def create_app():
     app = FastAPI(
         debug=settings.DEBUG,
         title=settings.SERVICE_NAME,
-        version="0.0.1",
+        lifespan=lifespan,
+        version="1.0",
     )
 
     app.add_middleware(

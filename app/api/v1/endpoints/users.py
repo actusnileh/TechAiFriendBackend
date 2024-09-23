@@ -8,6 +8,7 @@ from sqlalchemy.exc import IntegrityError
 
 from app.schema.add_user_schema import AddUserSchema
 from app.services.user_service import UserService
+from app.tasks.neural_network import apply_neural_network
 from app.utils.api_utils import extract_user_id
 
 
@@ -31,7 +32,11 @@ async def add_user(
 ):
     try:
         user_id = extract_user_id(url)
-        return await user_service.add_user(user_id)
+        user_data = await user_service.add_user(user_id)
+
+        apply_neural_network.delay()
+
+        return user_data
     except IntegrityError:
         raise HTTPException(
             status_code=400,

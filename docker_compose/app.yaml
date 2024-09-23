@@ -1,15 +1,17 @@
 services:
-  fastapi:
-    build: ..
-    command: uvicorn --factory app.main:create_app --reload --host 0.0.0.0 --port 8000
-    volumes:
-      - ..:/code
-    ports:
-      - "8000:8000"
-    networks:
-      - tech_ai_network
-    container_name: techai-fastapi
+    fastapi:
+        build: ..
+        container_name: techai-fastapi
+        command: >
+            sh -c "uvicorn --factory app.main:create_app --reload --host 0.0.0.0 --port 8000 & 
+            celery -A app.core.configs.celery:celery worker --loglevel=info"
+        volumes:
+            - ..:/fastapi
+        ports:
+            - "8000:8000"
+        networks:
+            - tech_ai_network
 
 networks:
-  tech_ai_network:
-    driver: bridge
+    tech_ai_network:
+        driver: bridge
