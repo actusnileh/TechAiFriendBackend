@@ -1,4 +1,7 @@
-from sqlalchemy import or_, select
+from sqlalchemy import (
+    or_,
+    select,
+)
 
 from app.core.database import async_session_maker
 from app.models.photos import Photos
@@ -20,7 +23,7 @@ class PhotosRepository(BaseRepository):
                         cls.model.photo_description_colors.is_(None),
                         cls.model.photo_description_category.is_(None),
                         cls.model.photo_description_style.is_(None),
-                    )
+                    ),
                 )
                 .limit(2)
             )

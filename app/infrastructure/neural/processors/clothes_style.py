@@ -25,7 +25,9 @@ class ClothesStyle:
         return [
             self.detect_style(styles)
             for styles in self.processor.get_answer(
-                images, [self.styles_question for _ in images], k=5
+                images,
+                [self.styles_question for _ in images],
+                k=5,
             )
         ]
 

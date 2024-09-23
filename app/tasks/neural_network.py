@@ -1,6 +1,6 @@
 import asyncio
-from app.core.configs.celery import celery
 
+from app.core.configs.celery import celery
 from app.infrastructure.neural.neural_infra import NeuralNetworkProcessor
 
 

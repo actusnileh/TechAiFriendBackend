@@ -28,9 +28,11 @@ class ClothesColor:
             [
                 self.detect_colors(" ".join(colors))
                 for colors in self.processor.get_answer(
-                    images, [self.color_question for _ in images], k=3
+                    images,
+                    [self.color_question for _ in images],
+                    k=3,
                 )
-            ]
+            ],
         )
         return np.where(colors is None, "Black", colors)
 

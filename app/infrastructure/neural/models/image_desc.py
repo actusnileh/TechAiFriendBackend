@@ -1,5 +1,8 @@
-from transformers import AutoProcessor, AutoModelForCausalLM
 import torch
+from transformers import (
+    AutoModelForCausalLM,
+    AutoProcessor,
+)
 
 
 class ImageDesc:

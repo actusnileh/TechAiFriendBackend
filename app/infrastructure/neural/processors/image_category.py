@@ -12,7 +12,9 @@ class ImageCategory:
         return [
             self.detect_category(categories)
             for categories in self.processor.get_answer(
-                images, [self.categories_question for _ in images], k=3
+                images,
+                [self.categories_question for _ in images],
+                k=3,
             )
         ]
 

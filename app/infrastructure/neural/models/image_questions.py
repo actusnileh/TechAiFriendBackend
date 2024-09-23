@@ -1,15 +1,18 @@
-from transformers import ViltProcessor, ViltForQuestionAnswering
 import torch
+from transformers import (
+    ViltForQuestionAnswering,
+    ViltProcessor,
+)
 
 
 class ImageQuestions:
     def __init__(self, batch_size=1):
         self.batch_size = batch_size
         self.processor = ViltProcessor.from_pretrained(
-            "dandelin/vilt-b32-finetuned-vqa"
+            "dandelin/vilt-b32-finetuned-vqa",
         )
         self.model = ViltForQuestionAnswering.from_pretrained(
-            "dandelin/vilt-b32-finetuned-vqa"
+            "dandelin/vilt-b32-finetuned-vqa",
         )
 
         self.device = "cpu"
@@ -18,7 +21,10 @@ class ImageQuestions:
 
     def get_answer(self, images, questions, k=5):
         encoding = self.processor(
-            images=images, text=questions, return_tensors="pt", padding=True
+            images=images,
+            text=questions,
+            return_tensors="pt",
+            padding=True,
         ).to(self.device)
         with torch.no_grad():
             outputs = self.model(**encoding)

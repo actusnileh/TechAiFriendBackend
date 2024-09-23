@@ -1,5 +1,8 @@
-from transformers import MarianMTModel, MarianTokenizer
 import torch
+from transformers import (
+    MarianMTModel,
+    MarianTokenizer,
+)
 
 
 class TextTranslator:
@@ -22,14 +25,18 @@ class TextTranslator:
 
     def get_translation(self, texts):
         inputs = self.tokenizer(
-            texts, return_tensors="pt", padding=True, truncation=True
+            texts,
+            return_tensors="pt",
+            padding=True,
+            truncation=True,
         ).to(self.device)
 
         with torch.no_grad():
             outputs = self.model.generate(**inputs)
 
         batch_translations = self.tokenizer.batch_decode(
-            outputs, skip_special_tokens=True
+            outputs,
+            skip_special_tokens=True,
         )
 
         return batch_translations

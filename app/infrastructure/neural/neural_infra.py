@@ -1,5 +1,7 @@
-from PIL import Image
 import requests
+from PIL import Image
+
+from app.core.database import async_session_maker
 from app.infrastructure.neural.models.image_desc import ImageDesc
 from app.infrastructure.neural.models.image_questions import ImageQuestions
 from app.infrastructure.neural.models.text_translator import TextTranslator
@@ -7,7 +9,6 @@ from app.infrastructure.neural.processors.clothes_color import ClothesColor
 from app.infrastructure.neural.processors.clothes_style import ClothesStyle
 from app.infrastructure.neural.processors.image_category import ImageCategory
 from app.repository.photo_repository import PhotosRepository
-from app.core.database import async_session_maker
 
 
 class NeuralNetworkProcessor:
